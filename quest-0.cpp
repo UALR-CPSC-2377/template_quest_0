@@ -26,54 +26,55 @@ int padding = 3; // number of spaces on each side of the word
 const int maxNumberGuesses = 4;
 int currentGuessNumber = 0;
 string currentGuessString = "";
+string correctCountry = "";
 
 string countries [] = {
-    "Senegal",
-    "Serbia",
-    "Seychelles",
-    "Singapore",
-    "Slovakia",
-    "Slovenia",
-    "Somalia",
-    "Spain",
-    "Sudan",
-    "Suriname",
-    "Swaziland",
-    "Sweden",
-    "Switzerland",
-    "Syria",
-    "Taiwan",
-    "Tajikistan",
-    "Tanzania",
-    "Thailand",
-    "Togo",
-    "Tonga",
-    "Tunisia",
-    "Turkey",
-    "Turkmenistan",
-    "Tuvalu",
-    "Uganda",
-    "Ukraine",
-    "Uruguay",
-    "Uzbekistan",
-    "Vanuatu",
-    "Venezuela",
+    "senegal",
+    "serbia",
+    "seychelles",
+    "singapore",
+    "slovakia",
+    "slovenia",
+    "somalia",
+    "spain",
+    "sudan",
+    "suriname",
+    "swaziland",
+    "sweden",
+    "switzerland",
+    "syria",
+    "taiwan",
+    "tajikistan",
+    "tanzania",
+    "thailand",
+    "togo",
+    "tonga",
+    "tunisia",
+    "turkey",
+    "turkmenistan",
+    "tuvalu",
+    "uganda",
+    "ukraine",
+    "uruguay",
+    "uzbekistan",
+    "vanuatu",
+    "venezuela",
 };
 
 int main () {
     clearConsole();
 
-    string chosenCountry = countries[chooseRandomCountry()];
+    correctCountry = countries[chooseRandomCountry()];
 
     // this will initialize the currentGuess String to
     // be the same length as the chosen county but contain only asterisks
-	currentGuessString = std::string(chosenCountry.length(), '*');
+	currentGuessString = std::string(correctCountry.length(), '*');
 
     while (isGameDone(currentGuessString) == false) {
         printGameBoard(currentGuessString);
         printNumberOfTries();
         char userGuess = processUserInput();
-        fillLetters(userGuess, chosenCountry);
+        fillLetters(userGuess, correctCountry);
 
         clearConsole();
     }
