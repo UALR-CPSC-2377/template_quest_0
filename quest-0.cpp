@@ -1,66 +1,138 @@
-#include <string>
+/*
+        HANGMAN
+*/
 #include <iostream>
-#include <ctime>
+#include <string>
 #include <random>
+#include <ctype.h>
 
 using namespace std;
 
-//Array constants
-enum { EMPTY, CURRENT, HISTORY, JEWEL };
-const int Nboard = 6;
+void fillLetters (char, string);
+int chooseRandomCountry ();
+void pauseConsole ();
+void printGameBoard (string);
+char processUserInput ();
+void clearConsole ();
+bool isGameDone (string);
+void printGameOver (string guess);
+bool isGameSuccessful (string currentGuess);
+void printNumberOfTries ();
 
-//GUI Functions
-void clearConsole();
-void pauseConsole();
-void splashScreen();
-void displayGameState(int[Nboard][Nboard], string, bool);
-void displayGameDone(int[Nboard][Nboard], int, int, string);
-char getAction();
+const int numCountries = 30;
+int padding = 3; // number of spaces on each side of the word
 
-//Engine Functions
-void initGame(int[Nboard][Nboard], int&, int&, int&, int&);
-void changeGameState(char, int[Nboard][Nboard], int&, int&, bool&);
-bool gameIsDone(int, int, int, int);
+// These variables are important to keep in mind
+const int maxNumberGuesses = 4;
+int currentGuessNumber = 0;
+string currentGuessString = "";
 
-string studentName = "Your name here (2020)";
+string countries [] = {
+    "Senegal",
+    "Serbia",
+    "Seychelles",
+    "Singapore",
+    "Slovakia",
+    "Slovenia",
+    "Somalia",
+    "Spain",
+    "Sudan",
+    "Suriname",
+    "Swaziland",
+    "Sweden",
+    "Switzerland",
+    "Syria",
+    "Taiwan",
+    "Tajikistan",
+    "Tanzania",
+    "Thailand",
+    "Togo",
+    "Tonga",
+    "Tunisia",
+    "Turkey",
+    "Turkmenistan",
+    "Tuvalu",
+    "Uganda",
+    "Ukraine",
+    "Uruguay",
+    "Uzbekistan",
+    "Vanuatu",
+    "Venezuela",
+};
 
 int main () {
-	//the game board
-	int board[Nboard][Nboard];
+    clearConsole();
 
-	//State variables
-	int currentRow, currentCol, secretRow, secretCol;
-	bool history = true;
+    string chosenCountry = countries[chooseRandomCountry()];
 
-	//Splash Screen
-	clearConsole();
-	splashScreen();
+    // this will initialize the currentGuess String to
+    // be the same length as the chosen county but contain only asterisks
+	currentGuessString = std::string(chosenCountry.length(), '*');
 
-	initGame(board, currentRow, currentCol, secretRow, secretCol);
+    while (isGameDone(currentGuessString) == false) {
+        printGameBoard(currentGuessString);
+        printNumberOfTries();
+        char userGuess = processUserInput();
+        fillLetters(userGuess, chosenCountry);
 
-	do {
-		//Display Game State
-		clearConsole();
-		displayGameState(board, "Current Search History", history);
+        clearConsole();
+    }
 
-		//Update Game State
-		changeGameState(getAction(), board, currentRow, currentCol, history);
-
-		//Check Game Termination
-	} while (!gameIsDone(currentRow, currentCol, secretRow, secretCol));
-
-	//Display Termination Game State
-	displayGameDone(board, secretRow, secretCol, "YOU FOUND THE HIDDEN JEWEL!");
-
-	return 0;
+    printGameOver(currentGuessString);
 }
 
-void clearConsole () {
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
-	system("cls");
-#else
-    system("clear");
-#endif
+bool isGameDone (string currentGuess) {
+    /*  This function determines if the game is over */
+
+    return true; // placeholder
+}
+
+bool isGameSuccessful (string currentGuess) {
+    /*  This function determines if a player succesfully
+        guessed all of the characters
+    */
+
+    return false; // placeholder
+}
+
+void printGameOver (string currentGuess) {
+    /*
+        This function will print out the game board with a message at the bottom
+        "CONGRATS" if the the player was successful and "YOU FAILED" if they werent.
+    */
+}
+
+void printGameBoard (string guess) {
+    /*
+        This function will print out a rectangle to contain the
+        current guess and the line
+
+        The width of the box is the length of the guess string + 2*padding.
+        The padding defines the number of spaces on either side of the underline
+    */
+}
+
+void printNumberOfTries () {
+    /* this function will print out the number of tries that the user has attempted
+        as well as a message
+    */
+}
+
+char processUserInput () {
+    /*
+        This function will print out a message for the user to enter a character
+        The character will then be returned,
+    */
+
+    return 'n'; // placeholder
+}
+
+void fillLetters (char guessChar, string secretWord) {
+    /*
+        This function will modify the global variable currentGuessString.
+        If any characters in the secretWord match with the guessChar, those
+        characters in currentGuessString need to be changed.
+    */
 }
 
 void pauseConsole () {
@@ -69,71 +141,18 @@ void pauseConsole () {
     std::getline(std::cin, temp);
 }
 
-void splashScreen () {
-	cout << "HIDDEN JEWEL!" << endl;
-	cout << endl;
-	cout << studentName << endl;
-	cout << "CPSC 2376, Programming II, Quest 0" << endl;
-	cout << "UALR, Computer Science Dept." << endl;
-	cout << endl;
-	cout << "INSTRUCTIONS:" << endl;
-	cout << endl;
-	cout << "Find the hidden jewel to win the game!" << endl;
-	cout << endl;
-	cout << "        (North)          " << endl;
-	cout << "           w             " << endl;
-	cout << "           |             " << endl;
-	cout << "(West) a --+-- d (East)  " << endl;
-	cout << "           |             " << endl;
-	cout << "           s             " << endl;
-	cout << "        (South)          " << endl;
-	cout << endl;
-	cout << "Select 'h' to toggle history." << endl;
-	cout << endl;
-
-	pauseConsole();
+void clearConsole () {
+    #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
+    	system("cls");
+    #else
+        system("clear");
+    #endif
 }
 
-void displayGameState (int board[Nboard][Nboard], string message, bool history) {
-	//Implement here
+int chooseRandomCountry () {
+    random_device seed;
+    default_random_engine engine(seed());
+    uniform_int_distribution<int> dist(0, numCountries-1);
 
-}
-
-void displayGameDone (int board[Nboard][Nboard], int secretRow, int secretCol, string message) {
-	//Implement here
-
-}
-
-char getAction () {
-	//Implement here
-
-	return('n'); //This is a placeholder to make the program compile!
-
-}
-
-void initGame (int board[Nboard][Nboard], int& currentRow, int& currentCol, int& secretRow, int& secretCol) {
-	//this code given to you because we have not covered random number generation yet;
-	//You will still need to add more code to this function.
-	random_device seed;
-	default_random_engine e(seed());
-	uniform_int_distribution<int> d(0, Nboard-1);
-
-	//generates random location.
-	secretRow = d(e);
-	secretCol = d(e);
-
-	// Implement here
-}
-
-void changeGameState (char action, int board[Nboard][Nboard], int& currentRow, int& currentCol, bool& history) {
-	//Implement here
-
-}
-
-
-bool gameIsDone (int currentRow, int currentCol, int secretRow, int secretCol) {
-	//Implement here
-
-	return false; //This is a placehold to make the program compile!
-
+    return dist(engine);
 }
